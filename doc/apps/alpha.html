@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="description" content="Transparent Image Convert: Convert a specific color to transparent." />
+        <meta property="og:title" content="Demo Page" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://kiwasa003.github.io/demo/apps/alpha.html" />
+        <meta property="og:image" content="" />
+        <meta property="og:site_name" content="Demo Page" />
+        <meta property="og:description" content="Transparent Image Convert: Convert a specific color to transparent." />
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:title" content="Demo Page" />
+        <meta property="twitter:description" content="Transparent Image Convert: Convert a specific color to transparent." />
+        <meta property="twitter:image" content="" />
+        <meta itemprop="image" content="" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-title" content="Demo Page" />
+        <link rel="apple-touch-icon" href="" sizes="192x192" />
+        <link rel="shortcut icon" href="" />
+        <link rel="manifest" href="" />
+
+        <title>Demo Page</title>
+
+        <!--
+        <link rel="stylesheet" href="style.css">
+        -->
+
+        <style>
+            .container {
+                padding: 10px;
+                overwrap-x: auto;
+            }
+
+            img#imageDummy,
+            img#imageDummy:not([src='#']) ~ * .image-none,
+            img#imageDummy[src='#'] ~ * .image-set {
+                display: none;
+            }
+
+            .image-area {
+                position: relative;
+                padding: 0px 0px 10px 0px;
+            }
+
+            .image-area > div {
+                position: absolute;
+                padding: 10px;
+                z-index: -1;
+            }
+
+            .input-area input[type=file] {
+                display: none;
+            }
+
+            #colorLabel {
+                width: 30px;
+                border: 1px solid #000;
+            }
+
+            .large-button {
+                display: inline-block;
+                width: 130px;
+                height: 3em;
+                padding: 2px;
+            }
+
+            .large-button > input {
+                width: 100%;
+                height: 100%;
+            }
+
+            canvas {
+                border: 1px solid #000;
+                height: auto;
+                width: auto;
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            .row {
+                margin: 10px 5px;
+            }
+
+            .row .col {
+                display: inline-block;
+            }
+
+            .num-input {
+                width: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="">
+                <h1>Demo Page</h1>
+
+                <h2>Transparent Image Convert</h2>
+                <p>Convert a specific color to transparent.</p>
+                <ol>
+                    <li>Select a image file</li>
+                    <li>Input color (R, G, B) or Select color on image</li>
+                    <li>Click transparent button</li>
+                </ol>
+            </div>
+
+            <img src="#" id="imageDummy" onload="onImageLoad(event)" />
+
+            <div class="image-area">
+                <div class="image-none">No image</div>
+                <canvas id="imageCanvas" onclick="onCanvasClick(event)"></canvas>
+            </div>
+
+            <div class="input-area">
+                <div>
+                    <div class="large-button">
+                        <input type="button" value="Select" onclick="document.getElementById('inputFile').click();" />
+                        <input id="inputFile" type="file" title="select a file" onchange="onFileChange(event)" />
+                    </div>
+                    <div class="large-button">
+                        <input type="button" class="image-none" value="Reset" disabled="disabled" />
+                        <input type="button" class="image-set" value="Reset" onclick="onResetClick(event)" />
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col">
+                            R:
+                        </div>
+                        <div class="col">
+                            <input type="text" class="num-input" id="inputR" value="0" onchange="onNumberChange(event)" />
+                        </div>
+                        <div class="col">
+                            +/-
+                            <input type="text" class="num-input" id="inputDiffR" value="0" onchange="onNumberChange(event)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            G:
+                        </div>
+                        <div class="col">
+                            <input type="text" class="num-input" id="inputG" value="0" onchange="onNumberChange(event)" />
+                        </div>
+                        <div class="col">
+                            +/-
+                            <input type="text" class="num-input" id="inputDiffG" value="0" onchange="onNumberChange(event)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            B:
+                        </div>
+                        <div class="col">
+                            <input type="text" class="num-input" id="inputB" value="0" onchange="onNumberChange(event)" />
+                        </div>
+                        <div class="col">
+                            +/-
+                            <input type="text" class="num-input" id="inputDiffB" value="0" onchange="onNumberChange(event)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Selected color:
+                        </div>
+                        <div class="col">
+                            <div id="colorLabel">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="large-button">
+                        <input type="button" class="image-none" value="Transparent" disabled="disabled" />
+                        <input type="button" class="image-set" value="Transparent" onclick="onTransparentClick(event)" />
+                    </div>
+                    <div class="large-button">
+                        <input type="button" class="image-none" value="Save" disabled="disabled" />
+                        <input type="button" class="image-set" value="Save" onclick="onSaveClick(event)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function onFileChange(e) {
+                var file = e.target.files[0];
+                if (!file) {
+                    return;
+                }
+                var fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    var img = document.getElementById("imageDummy");
+                    if (img) {
+                        img.src = e.target.result;
+                    }
+                };
+                fileReader.readAsDataURL(file);
+
+                return;
+            }
+
+            function onImageLoad(e) {
+                var canvas = document.getElementById("imageCanvas");
+                initCanvas(canvas, e.target);
+                return;
+            }
+
+            function onResetClick(e) {
+                var img = document.getElementById("imageDummy");
+                var canvas = document.getElementById("imageCanvas");
+                initCanvas(canvas, img);
+                return;
+            }
+
+            function onTransparentClick(e) {
+                var canvas = document.getElementById("imageCanvas");
+                if (!canvas) {
+                    return;
+                }
+
+                var input = {
+                    r: getColorValue(document.getElementById("inputR").value),
+                    g: getColorValue(document.getElementById("inputG").value),
+                    b: getColorValue(document.getElementById("inputB").value),
+                    diffR: getColorValue(document.getElementById("inputDiffR").value),
+                    diffG: getColorValue(document.getElementById("inputDiffG").value),
+                    diffB: getColorValue(document.getElementById("inputDiffB").value),
+                };
+            
+                var context = canvas.getContext("2d");
+                var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+                var size = imgData.width * imgData.height;
+                for (var i = 0; i < size; i++) {
+                    if ((Math.abs(imgData.data[i * 4] - input.r) > input.diffR) ||
+                        (Math.abs(imgData.data[i * 4 + 1] - input.g) > input.diffG) ||
+                        (Math.abs(imgData.data[i * 4 + 2] - input.b) > input.diffB)) {
+                        continue;
+                    }
+                    imgData.data[i * 4 + 3] = 0;
+                }
+                context.putImageData(imgData, 0, 0);
+                return;
+            }
+
+            function onSaveClick(e) {
+                var canvas = document.getElementById("imageCanvas");
+                if (canvas) {
+                    var img = document.createElement("img");
+                    img.src = canvas.toDataURL();
+                    img.style.maxWidth = "100%";
+                    var w = window.open();
+                    w.document.title = document.title;
+                    w.document.body.appendChild(img);
+                    var a = document.createElement("a");
+                    a.href = canvas.toDataURL();
+                    a.download = "demo.png";
+                    a.click();
+                }
+                return;
+            }
+
+            function onCanvasClick(e) {
+                var canvas = e.target;
+                var rect = canvas.getBoundingClientRect();
+                var x = parseInt((e.clientX - rect.left) * canvas.width / rect.width);
+                var y = parseInt((e.clientY - rect.top) * canvas.height / rect.height);
+                var index = (y * canvas.width + x) * 4;
+                var imgData = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height);
+                document.getElementById("inputR").value = imgData.data[index];
+                document.getElementById("inputG").value = imgData.data[index + 1];
+                document.getElementById("inputB").value = imgData.data[index + 2];
+                setSelectedColor();
+                return;
+            }
+
+            function onNumberChange(e) {
+                e.target.value = getColorValue(e.target.value);
+                setSelectedColor();
+                return;
+            }
+
+            function initCanvas(canvas, img) {
+                if (img && canvas) {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    var context = canvas.getContext("2d");
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                }
+
+                return;
+            }
+
+            function getColorValue(strValue) {
+                var num = parseInt(strValue);
+                if (isNaN(num)) {
+                    num = 0;
+                } else if (num < 0) {
+                    num = 0;
+                } else if (num > 0xff) {
+                    num = 0xff;
+                } else {
+
+                }
+                return num;
+            }
+
+            function setSelectedColor() {
+                var r = getColorValue(document.getElementById("inputR").value);
+                var g = getColorValue(document.getElementById("inputG").value);
+                var b = getColorValue(document.getElementById("inputB").value);
+                document.getElementById("colorLabel").style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+                return;
+            }
+        </script>
+    </body>
+</html>
