@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="ナンプレ解答ツール: ナンプレを解答します" />
+    <meta property="og:title" content="デモページ" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kiwasa003.github.io/demo/apps/alpha.html" />
+    <meta property="og:image" content="" />
+    <meta property="og:site_name" content="デモページ" />
+    <meta property="og:description" content="ナンプレ解答ツール: ナンプレを解答します" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="デモページ" />
+    <meta property="twitter:description" content="ナンプレ解答ツール: ナンプレを解答します" />
+    <meta property="twitter:image" content="" />
+    <meta itemprop="image" content="" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="デモページ" />
+    <link rel="apple-touch-icon" href="" sizes="192x192" />
+    <link rel="shortcut icon" href="" />
+    <link rel="manifest" href="" />
+
+    <title>デモページ</title>
+
+    <!--
+    <link rel="stylesheet" href="style.css">
+    -->
+
+    <style>
+        .container {
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        #isPlaying {
+            display: none;
+        }
+
+        .board-area {
+            padding: 0px 0px 10px 0px;
+        }
+
+        table {
+            table-layout: fixed;
+        }
+
+        table.table-bordered {
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+            border-collapse: separate;
+            border-spacing: 0px;
+        }
+
+        table.table-bordered td {
+            border-right: 1px solid #000;
+            border-bottom: 1px solid #000;
+        }
+
+        #boardTable {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        #boardTable td {
+            text-align: center;
+            width: 3em;
+            height: 3em;
+        }
+
+        #boardTable td input {
+            width: 90%;
+            height: 90%;
+            border: none;
+            font-size: 150%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #boardTable td input[disabled] {
+            background-color: #f0f0f0;
+            pointer-events: none;
+            font-weight: normal;
+        }
+
+        #boardTable td input.error {
+            background-color: #f0e0e0;
+        }
+
+        #boardTable.table-bordered {
+            border-top-width: 2px;
+            border-left-width: 2px;
+        }
+
+        #boardTable.table-bordered tr td:nth-child(3),
+        #boardTable.table-bordered tr td:nth-child(6),
+        #boardTable.table-bordered tr td:nth-child(9) {
+            border-right-width: 2px;
+        }
+
+        #boardTable.table-bordered tr:nth-child(3) td,
+        #boardTable.table-bordered tr:nth-child(6) td,
+        #boardTable.table-bordered tr:nth-child(9) td {
+            border-bottom-width: 2px;
+        }
+
+        #colorLabel {
+            width: 30px;
+            border: 1px solid #000;
+        }
+
+        .small-button {
+            display: inline-block;
+            width: 2em;
+            height: 2em;
+            padding: 3px;
+        }
+
+        .large-button {
+            display: inline-block;
+            width: 130px;
+            height: 3em;
+            padding: 2px;
+        }
+
+        .large-button > input,
+        .small-button > input {
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            border: 1px solid #000;
+            height: auto;
+            width: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .row {
+            margin: 10px 5px;
+        }
+
+        .row .col {
+            display: inline-block;
+        }
+
+        .num-input {
+            width: 50px;
+        }
+
+        @media(max-width: 600px) {
+            #boardTable td {
+                font-size: 80%;
+            }
+        }
+
+        @media(max-width: 450px) {
+            #boardTable td {
+                font-size: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="">
+            <h1>デモページ</h1>
+
+            <h2>ナンプレ解答ツール</h2>
+            <ul>
+                <li>問題を入力して [解答] を押すと自動で入力します</li>
+                <li>[プレイ] を押すと問題をプレイできます</li>
+                <li>[別の問題] を押すと別の問題を自動入力します</li>
+            </ul>
+        </div>
+
+        <input type="checkbox" id="isPlaying" />
+
+        <div class="board-area">
+            <table id="boardTable" class="table-bordered">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="input-area">
+            <div>
+                <div class="large-button">
+                    <input type="button" class="image-set" value="プレイ" onclick="onPlayClick(event)" />
+                </div>
+                <div class="large-button">
+                    <input type="button" class="image-set" value="解答" onclick="onAutoPlayClick(event)" />
+                </div>
+                <div class="large-button">
+                    <input type="button" class="image-set" value="別の問題" onclick="onNextClick(event)" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/wasm_exec.js"></script>
+    <script>
+        if (window.WebAssembly) {
+            if (!WebAssembly.instantiateStreaming) {
+                WebAssembly.instantiateStreaming = async (resp, importObject) => {
+                    var source = await (await resp).arrayBuffer();
+                    return await WebAssembly.instantiate(source, importObject);
+                };
+            }
+
+            var go = new Go();
+            WebAssembly.instantiateStreaming(fetch("../wasm/demo2.wasm"), go.importObject).then((result) => {
+                go.run(result.instance);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
+    </script>
+    <script>
+        function initialize() { }
+        function getBoard() { return []; }
+        function setBoard(arr) { return false; }
+        function setBoardValue(index, value) { return false; }
+        function autoPlay() { return false; }
+        function checkCell(index) { return false; }
+
+        function onNumberInputChange(e) {
+            var value = getNumberValue(e.target.value);
+            var index = getIndex(e.target.id);
+
+            if (!setBoardValue(index, value)) {
+                return;
+            }
+
+            if (value > 0) {
+                e.target.value = value;
+            } else {
+                e.target.value = "";
+            }
+
+            setBoardState(getBoard(), true);
+            return;
+        }
+
+        function onPlayClick(e) {
+            var board = getBoard();
+
+            if (isPlaying()) {
+                setBoardLock(board, false);
+                setPlaying(false);
+
+            } else {
+                if (!updateBoard(board)) {
+                    return;
+                }
+
+                setBoardLock(board, true);
+                setPlaying(true);
+            }
+            return;
+        }
+
+        function onAutoPlayClick(e) {
+            if (isPlaying()) {
+                if (!autoPlay()) {
+                    return;
+                }
+
+                setPlaying(false);
+
+            } else {
+                var board = getBoard();
+                if (!updateBoard(board)) {
+                    return;
+                }
+
+                if (!autoPlay()) {
+                    if (setBoardState(board, true)) {
+                        alert("入力に誤りがあります");
+                    }
+                    return;
+                }
+
+                setBoardLock(board, true);
+            }
+
+            var board = getBoard();
+            redrawBoard(board);
+            setBoardState(board, false);
+
+            return;
+        }
+
+        function onNextClick(e) {
+            initialize();
+            var board = getBoard();
+            setBoardState(board, false);
+            redrawBoard(board);
+            setBoardLock(board, false);
+            return;
+        }
+
+        function updateBoard(board) {
+            if (!board) {
+                return false;
+            }
+
+            for (var i = 0; i < board.length; i++) {
+                var input = document.getElementById("value" + i);
+                var num = 0;
+                if (input) {
+                    num = getNumberValue(input.value);
+                }
+                board[i] = num;
+            }
+
+            if (!setBoardState(board, true)) {
+                return false;
+            }
+
+            if (!setBoard(board)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function getNumberValue(str) {
+            var num = parseInt(str);
+            if (isNaN(num)) {
+                return 0;
+            }
+
+            if (num <= 0) {
+                num = 0;
+            } else if (num > 9) {
+                num = 9;
+            } else {
+
+            }
+
+            return num;
+        }
+
+        function getIndex(id) {
+            var board = getBoard();
+            var index = -1;
+            if (board) {
+                for (var i = 0; i < board.length; i++) {
+                    if (id == "value" + i) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+
+            return index;
+        }
+
+        function setBoardLock(board, on) {
+            if (!board) {
+                return;
+            }
+
+            for (var i = 0; i < board.length; i++) {
+                var input = document.getElementById("value" + i);
+                if (!input) {
+                    continue;
+                }
+
+                if (on && getNumberValue(input.value) > 0) {
+                    input.disabled = true;
+                } else {
+                    input.disabled = false;
+                }
+            }
+
+            return;
+        }
+
+        function redrawBoard(board) {
+            if (!board) {
+                return;
+            }
+
+            for (var i = 0; i < board.length; i++) {
+                var input = document.getElementById("value" + i);
+                if (input) {
+                    if (board[i] > 0) {
+                        input.value = board[i];
+                    } else {
+                        input.value = "";
+                    }
+                }
+            }
+            return;
+        }
+
+        function setBoardState(board, err) {
+            if (!board) {
+                return false;
+            }
+
+            var ret = true;
+            for (var i = 0; i < board.length; i++) {
+                var input = document.getElementById("value" + i);
+                if (input) {
+                    if (err && !input.disabled && !checkCell(i)) {
+                        input.className = "error";
+                        ret = false;
+                    } else {
+                        input.className = "";
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        function setPlaying(on) {
+            var playing = document.getElementById("isPlaying");
+            if (playing) {
+                playing.checked = on;
+            }
+            return;
+        }
+
+        function isPlaying() {
+            var obj = document.getElementById("isPlaying");
+            if (!obj) {
+                return false;
+            }
+
+            return obj.checked;
+        }
+
+        window.onload = function () {
+            var table = document.getElementById("boardTable");
+            if (!table) {
+                return;
+            }
+
+            initialize();
+
+            var tds = table.getElementsByTagName("td");
+            for (var i = 0; i < tds.length; i++) {
+                var input = document.createElement("input");
+                input.type = "text";
+                input.onchange = onNumberInputChange;
+                input.value = "";
+                input.id = "value" + i;
+                input.maxLength = 1;
+                tds[i].appendChild(input);
+            }
+
+            return;
+        };
+    </script>
+</body>
+</html>
