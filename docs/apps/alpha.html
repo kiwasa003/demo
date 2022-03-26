@@ -4,26 +4,26 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <meta name="description" content="Transparent Image Convert: Convert a specific color to transparent." />
-        <meta property="og:title" content="Demo Page" />
+        <meta name="description" content="背景色透過ツール: 画像の中の特定の色を選択して透過します" />
+        <meta property="og:title" content="デモページ" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://kiwasa003.github.io/demo/apps/alpha.html" />
         <meta property="og:image" content="" />
-        <meta property="og:site_name" content="Demo Page" />
-        <meta property="og:description" content="Transparent Image Convert: Convert a specific color to transparent." />
+        <meta property="og:site_name" content="デモページ" />
+        <meta property="og:description" content="背景色透過ツール: 画像の中の特定の色を選択して透過します" />
         <meta property="twitter:card" content="summary" />
-        <meta property="twitter:title" content="Demo Page" />
-        <meta property="twitter:description" content="Transparent Image Convert: Convert a specific color to transparent." />
+        <meta property="twitter:title" content="デモページ" />
+        <meta property="twitter:description" content="背景色透過ツール: 画像の中の特定の色を選択して透過します" />
         <meta property="twitter:image" content="" />
         <meta itemprop="image" content="" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        <meta name="apple-mobile-web-app-title" content="Demo Page" />
+        <meta name="apple-mobile-web-app-title" content="デモページ" />
         <link rel="apple-touch-icon" href="" sizes="192x192" />
         <link rel="shortcut icon" href="" />
         <link rel="manifest" href="" />
 
-        <title>Demo Page</title>
+        <title>デモページ</title>
 
         <!--
         <link rel="stylesheet" href="style.css">
@@ -32,12 +32,12 @@
         <style>
             .container {
                 padding: 10px;
-                overwrap-x: auto;
+                overflow-x: auto;
             }
 
             img#imageDummy,
-            img#imageDummy:not([src='#']) ~ * .image-none,
-            img#imageDummy[src='#'] ~ * .image-set {
+            img#imageDummy:not([src$='#']) ~ * .image-none,
+            img#imageDummy[src$='#'] ~ * .image-set {
                 display: none;
             }
 
@@ -97,33 +97,33 @@
     <body>
         <div class="container">
             <div class="">
-                <h1>Demo Page</h1>
+                <h1>デモページ</h1>
 
-                <h2>Transparent Image Convert</h2>
-                <p>Convert a specific color to transparent.</p>
+                <h2>背景色透過ツール</h2>
+                <p>画像の中の特定の色を選択して透過します</p>
                 <ol>
-                    <li>Select a image file</li>
-                    <li>Input color (R, G, B) or Select color on image</li>
-                    <li>Click transparent button</li>
+                    <li>画像を選択します</li>
+                    <li>透過したい色のRGB値を入力 または 画像上をクリックします</li>
+                    <li>透過ボタンを押します</li>
                 </ol>
             </div>
 
             <img src="#" id="imageDummy" onload="onImageLoad(event)" />
 
             <div class="image-area">
-                <div class="image-none">No image</div>
+                <div class="image-none">画像を選択してください</div>
                 <canvas id="imageCanvas" onclick="onCanvasClick(event)"></canvas>
             </div>
 
             <div class="input-area">
                 <div>
                     <div class="large-button">
-                        <input type="button" value="Select" onclick="document.getElementById('inputFile').click();" />
+                        <input type="button" value="画像選択" onclick="document.getElementById('inputFile').click();" />
                         <input id="inputFile" type="file" title="select a file" onchange="onFileChange(event)" />
                     </div>
                     <div class="large-button">
-                        <input type="button" class="image-none" value="Reset" disabled="disabled" />
-                        <input type="button" class="image-set" value="Reset" onclick="onResetClick(event)" />
+                        <input type="button" class="image-none" value="リセット" disabled="disabled" />
+                        <input type="button" class="image-set" value="リセット" onclick="onResetClick(event)" />
                     </div>
                 </div>
                 <div>
@@ -135,7 +135,7 @@
                             <input type="text" class="num-input" id="inputR" value="0" onchange="onNumberChange(event)" />
                         </div>
                         <div class="col">
-                            +/-
+                            ±
                             <input type="text" class="num-input" id="inputDiffR" value="0" onchange="onNumberChange(event)" />
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                             <input type="text" class="num-input" id="inputG" value="0" onchange="onNumberChange(event)" />
                         </div>
                         <div class="col">
-                            +/-
+                            ±
                             <input type="text" class="num-input" id="inputDiffG" value="0" onchange="onNumberChange(event)" />
                         </div>
                     </div>
@@ -159,13 +159,13 @@
                             <input type="text" class="num-input" id="inputB" value="0" onchange="onNumberChange(event)" />
                         </div>
                         <div class="col">
-                            +/-
+                            ±
                             <input type="text" class="num-input" id="inputDiffB" value="0" onchange="onNumberChange(event)" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            Selected color:
+                            選択した色:
                         </div>
                         <div class="col">
                             <div id="colorLabel">&nbsp;</div>
@@ -174,12 +174,12 @@
                 </div>
                 <div>
                     <div class="large-button">
-                        <input type="button" class="image-none" value="Transparent" disabled="disabled" />
-                        <input type="button" class="image-set" value="Transparent" onclick="onTransparentClick(event)" />
+                        <input type="button" class="image-none" value="透過" disabled="disabled" />
+                        <input type="button" class="image-set" value="透過" onclick="onTransparentClick(event)" />
                     </div>
                     <div class="large-button">
-                        <input type="button" class="image-none" value="Save" disabled="disabled" />
-                        <input type="button" class="image-set" value="Save" onclick="onSaveClick(event)" />
+                        <input type="button" class="image-none" value="ダウンロード" disabled="disabled" />
+                        <input type="button" class="image-set" value="ダウンロード" onclick="onSaveClick(event)" />
                     </div>
                 </div>
             </div>
@@ -264,6 +264,14 @@
             }
 
             function onCanvasClick(e) {
+                var img = document.getElementById("imageDummy");
+                if (img) {
+                    if (!img.src || img.src.length == 0 || img.src[img.src.length - 1] == "#") {
+                        document.getElementById('inputFile').click();
+                        return;
+                    }
+                }
+
                 var canvas = e.target;
                 var rect = canvas.getBoundingClientRect();
                 var x = parseInt((e.clientX - rect.left) * canvas.width / rect.width);
