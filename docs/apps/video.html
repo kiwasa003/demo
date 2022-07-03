@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="動画再生ツール: 動画を再生します" />
+    <meta property="og:title" content="デモページ" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kiwasa003.github.io/demo/apps/video.html" />
+    <meta property="og:image" content="" />
+    <meta property="og:site_name" content="デモページ" />
+    <meta property="og:description" content="動画再生ツール: 動画を再生します" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="デモページ" />
+    <meta property="twitter:description" content="動画再生ツール: 動画を再生します" />
+    <meta property="twitter:image" content="" />
+    <meta itemprop="image" content="" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="デモページ" />
+    <link rel="apple-touch-icon" href="" sizes="192x192" />
+    <link rel="shortcut icon" href="" />
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRGVtbyIsInNob3J0X25hbWUiOiJEZW1vIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJzY29wZSI6Ii8iLCJzdGFydF91cmwiOiIvZGVtby9hcHBzL3ZpZGVvLmh0bWwifQ==" />
+
+    <title>デモページ</title>
+
+    <!--
+    <link rel="stylesheet" href="style.css">
+    -->
+
+    <style>
+        .container {
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        .input-area .label {
+            display: inline-block;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .small-button {
+            display: inline-block;
+            width: 2em;
+            height: 2em;
+            padding: 3px;
+        }
+
+        .large-button {
+            display: inline-block;
+            width: 130px;
+            height: 3em;
+            padding: 2px;
+        }
+
+        .large-button > input,
+        .small-button > input {
+            width: 100%;
+            height: 100%;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="">
+            <h1>デモページ</h1>
+
+            <h2>動画再生ツール</h2>
+            <ul>
+                <li>端末の動画ファイルを選択して再生します</li>
+                <li>選択した動画はサーバーにはアップロードされません</li>
+            </ul>
+        </div>
+
+        <div class="input-area">
+            <div class="large-button">
+                <input type="button" value="動画を選択" onclick="onSelectClick(event);" />
+                <input type="file" id="file" onchange="onFileChange(event);" accept="video/*" />
+            </div>
+            <div class="label">
+                <label>
+                    <input type="checkbox" id="autoplay" />
+                    自動再生
+                </label>
+            </div>
+            <div class="label">
+                <label>
+                    <input type="checkbox" id="loop" onchange="onLoopChange(event);" />
+                    連続再生
+                </label>
+            </div>
+        </div>
+
+        <div class="video-area">
+            <video id="video" onclick="onVideoClick(event);"></video>
+        </div>
+    </div>
+
+    <script>
+        function onSelectClick(e) {
+            var file = document.getElementById("file");
+            if (file) {
+                file.click();
+            }
+            return;
+        }
+
+        function onFileChange(e) {
+            var file = document.getElementById("file");
+            if (!file) {
+                return;
+            }
+            var autoplay = document.getElementById("autoplay");
+            var loop = document.getElementById("loop");
+            var fr = new FileReader();
+            fr.onload = function (e) {
+                var video = document.getElementById("video");
+                if (video) {
+                    video.autoplay = (autoplay && autoplay.checked);
+                    video.loop = (loop && loop.checked);
+                    video.src = fr.result;
+                }
+            };
+            fr.readAsDataURL(file.files[0]);
+            return;
+        }
+
+        function onLoopChange(e) {
+            var video = document.getElementById("video");
+            if (video) {
+                video.loop = e.target.checked;
+            }
+            return;
+        }
+
+        function onVideoClick(e) {
+            e.target.play();
+            return;
+        }
+    </script>
+</body>
+</html>
