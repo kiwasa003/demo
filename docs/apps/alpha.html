@@ -35,6 +35,10 @@
                 overflow-x: auto;
             }
 
+            .hidden ~ .container {
+                display: none;
+            }
+
             img#imageDummy,
             img#imageDummy:not([src$='#']) ~ * .image-none,
             img#imageDummy[src$='#'] ~ * .image-set {
@@ -95,6 +99,11 @@
         </style>
     </head>
     <body>
+        <script>
+            if (document.location.search) {
+                document.write("<input type='hidden' class='hidden' />");
+            }
+        </script>
         <div class="container">
             <div class="">
                 <h1>デモページ</h1>
@@ -252,9 +261,10 @@
                     var img = document.createElement("img");
                     img.src = canvas.toDataURL();
                     img.style.maxWidth = "100%";
-                    var w = window.open();
-                    w.document.title = document.title;
-                    w.document.body.appendChild(img);
+                    var w = window.open(document.location + "?" + Date.now());
+                    w.onload = function () {
+                        w.document.body.appendChild(img);
+                    };
                     var a = document.createElement("a");
                     a.href = canvas.toDataURL();
                     a.download = "demo.png";
