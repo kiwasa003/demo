@@ -88,12 +88,6 @@
             </div>
             <div class="label">
                 <label>
-                    <input type="checkbox" id="autoplay" />
-                    自動再生
-                </label>
-            </div>
-            <div class="label">
-                <label>
                     <input type="checkbox" id="loop" onchange="onLoopChange(event);" />
                     連続再生
                 </label>
@@ -101,7 +95,7 @@
         </div>
 
         <div class="video-area">
-            <video id="video" onclick="onVideoClick(event);"></video>
+            <video id="video" onclick="onVideoClick(event);" autoplay></video>
         </div>
     </div>
 
@@ -119,15 +113,14 @@
             if (!file) {
                 return;
             }
-            var autoplay = document.getElementById("autoplay");
             var loop = document.getElementById("loop");
             var fr = new FileReader();
             fr.onload = function (e) {
                 var video = document.getElementById("video");
                 if (video) {
-                    video.autoplay = (autoplay && autoplay.checked);
                     video.loop = (loop && loop.checked);
                     video.src = fr.result;
+                    video.play();
                 }
             };
             fr.readAsDataURL(file.files[0]);
