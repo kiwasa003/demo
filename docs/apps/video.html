@@ -95,7 +95,7 @@
         </div>
 
         <div class="video-area">
-            <video id="video" onclick="onVideoClick(event);" autoplay></video>
+            <video id="video" onclick="onVideoClick(event);" onload="onVideoLoad(event);" autoplay></video>
         </div>
     </div>
 
@@ -136,6 +136,11 @@
         }
 
         function onVideoClick(e) {
+            e.target.play();
+            return;
+        }
+
+        function onVideoLoad(e) {
             e.target.play();
             return;
         }
